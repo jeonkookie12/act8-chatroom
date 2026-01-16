@@ -1,0 +1,137 @@
+import { Injectable } from '@nestjs/common';
+
+export interface Chatroom {
+  id: string;
+  name: string;
+  messageCount: number;
+}
+
+export interface Message {
+  id: string;
+  username: string;
+  message: string;
+  timestamp: string;
+}
+
+@Injectable()
+export class ChatroomService {
+  // In-memory storage for chatrooms and messages
+  private chatrooms: Chatroom[] = [];
+  private messages: { [roomId: string]: Message[] } = {};
+
+  constructor() {
+    // Initialize with some default rooms
+    this.initializeDefaultRooms();
+  }
+
+  private initializeDefaultRooms() {
+    const defaultRooms = [
+      { id: 'general', name: 'General Chat', messageCount: 0 },
+      { id: 'random', name: 'Random', messageCount: 0 },
+    ];
+
+    this.chatrooms = defaultRooms;
+    defaultRooms.forEach(room => {
+      this.messages[room.id] = [];
+    });
+  }
+
+  getAllChatrooms(): Chatroom[] {
+    return this.chatrooms;
+  }
+
+  createChatroom(name: string): Chatroom {
+    // Check if room name already exists
+    const existingRoom = this.chatrooms.find(room => room.name.toLowerCase() === name.toLowerCase());
+    if (existingRoom) {
+      throw new Error('Chatroom name already exists');
+    }
+
+    const newRoom: Chatroom = {
+      id: `room_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      name: name,
+      messageCount: 0
+    };
+
+    this.chatrooms.push(newRoom);
+    this.messages[newRoom.id] = [];
+
+    return newRoom;
+  }
+
+  getChatroomById(id: string): Chatroom | null {
+    return this.chatrooms.find(room => room.id === id) || null;
+  }
+
+  getMessages(roomId: string): Message[] {
+    return this.messages[roomId] || [];
+  }
+
+  addMessage(roomId: string, username: string, message: string): Message {
+    const room = this.getChatroomById(roomId);
+    if (!room) {
+      throw new Error('Chatroom not found');
+    }
+
+    const newMessage: Message = {
+      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      username: username,
+      message: message,
+      timestamp: new Date().toISOString()
+    };
+
+    if (!this.messages[roomId]) {
+      this.messages[roomId] = [];
+    }
+
+    this.messages[roomId].push(newMessage);
+
+    // Update message count
+    room.messageCount = this.messages[roomId].length;
+
+    return newMessage;
+  }
+
+  deleteMessage(roomId: string, messageId: string, username: string): boolean {
+    const room = this.getChatroomById(roomId);
+    if (!room) {
+      return false;
+    }
+
+    if (!this.messages[roomId]) {
+      return false;
+    }
+
+    const messageIndex = this.messages[roomId].findIndex(msg => msg.id === messageId && msg.username === username);
+    if (messageIndex === -1) {
+      return false;
+    }
+
+    this.messages[roomId].splice(messageIndex, 1);
+
+    // Update message count
+    room.messageCount = this.messages[roomId].length;
+
+    return true;
+  }
+
+  deleteChatroom(roomId: string): boolean {
+    // Don't allow deletion of default rooms
+    if (roomId === 'general' || roomId === 'random') {
+      return false;
+    }
+
+    const roomIndex = this.chatrooms.findIndex(room => room.id === roomId);
+    if (roomIndex === -1) {
+      return false;
+    }
+
+    // Remove the room
+    this.chatrooms.splice(roomIndex, 1);
+
+    // Remove all messages for this room
+    delete this.messages[roomId];
+
+    return true;
+  }
+}
