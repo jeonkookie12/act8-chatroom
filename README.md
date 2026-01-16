@@ -1,3 +1,154 @@
+# Act8 - Chatroom Application
+
+A full-stack real-time Chatroom application with WebSocket support, built with NestJS backend and React frontend.
+## 🚀 Tech Stack
+
+### Backend
+- **NestJS** - Progressive Node.js framework
+- **TypeScript** - Type-safe JavaScript
+- **WebSocket Gateway** - Real-time communication
+### Frontend
+- **React** - UI library
+- **Vite** - Fast build tool
+- **CSS** - Custom styling
+## 📁 Project Structure
+
+```
+├── chatrooms.sql              # SQL schema for chatroom database
+├── backend/                   # NestJS WebSocket API
+│   ├── src/
+│   │   ├── chatroom.controller.ts
+│   │   ├── chatroom.gateway.ts
+│   │   ├── chatroom.service.ts
+│   │   ├── message.entity.ts
+│   │   └── websocket.service.ts
+│   └── package.json
+└── frontend/                  # React application
+   ├── src/
+   │   ├── App.jsx            # Main component
+   │   └── main.jsx           # Entry point
+   └── package.json
+```
+## 🎯 Features
+
+### Real-Time Chat
+- ✅ Join chatrooms
+- ✅ Send and receive messages instantly
+- ✅ Multiple chatrooms support
+- ✅ User presence notifications
+- ✅ Message history persistence
+
+### UI Features
+- ✅ Responsive chat interface
+- ✅ User list display
+- ✅ Room switching
+- ✅ Message timestamps
+
+## 🛠️ Setup Instructions
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Database (MySQL/PostgreSQL/SQLite)
+### Database Setup
+1. Set up the database using `chatrooms.sql`.
+2. Update backend `.env` with your database credentials.
+### Backend Setup
+1. Navigate to backend directory:
+   ```bash
+   cd backend
+2. Install dependencies:
+   ```bash
+   npm install
+3. Configure environment variables:
+   - Create a `.env` file in the backend directory
+   - Add your database and WebSocket config
+### Frontend Setup
+1. Navigate to frontend directory:
+   ```bash
+   cd frontend
+2. Install dependencies:
+   ```bash
+   npm install
+3. Configure environment variables (if needed):
+   - Create a `.env` file in the frontend directory
+   - Add your API base URL:
+## 📝 API & WebSocket Events
+
+### REST Endpoints
+- `GET /chatrooms` - List all chatrooms
+- `POST /chatrooms` - Create a new chatroom
+- `GET /chatrooms/:id/messages` - Get message history for a chatroom
+### WebSocket Events
+- `joinRoom` - Join a chatroom
+- `leaveRoom` - Leave a chatroom
+- `sendMessage` - Send a message to a room
+- `receiveMessage` - Receive a message from a room
+- `userJoined` - Notification when a user joins
+- `userLeft` - Notification when a user leaves
+## 📊 Database Entities
+
+### Chatroom Entity
+```typescript
+{
+   id: number
+   name: string
+   messages: Message[]
+}
+
+### Message Entity
+```typescript
+{
+   id: number
+   chatroom: Chatroom
+   chatroomId: number
+   sender: string
+   content: string
+   timestamp: Date
+}
+
+## 🧪 Testing
+### Backend Tests
+```bash
+cd backend
+npm run test
+### End-to-End Tests
+```bash
+cd backend
+npm run test:e2e
+## 📚 Documentation
+
+- Backend API documentation: [backend/BACKEND_DOCUMENTATION.md](backend/BACKEND_DOCUMENTATION.md)
+- Backend README: [backend/README.md](backend/README.md)
+- Frontend README: [frontend/README.md](frontend/README.md)
+
+## 👨‍💻 Development
+### Backend Architecture
+- **Chatroom Gateway** - Handles WebSocket connections and events
+- **Chatroom Service** - Business logic for chatrooms and messages
+- **Entities** - TypeORM models for chatrooms and messages
+- **Controllers** - REST endpoints for chatroom management
+
+### Frontend Development
+- **WebSocket Client** - Real-time communication with backend
+- **Chat UI** - Message list, input, and user list
+- **Room Management** - Join, leave, and switch rooms
+- **Responsive Design**
+
+## 🚢 Deployment
+
+### Backend Deployment
+- Set environment variables in production
+- Configure database connection
+- Enable CORS for frontend domain
+
+### Frontend Deployment
+- Build the production bundle: `npm run build`
+- Deploy the `dist` folder to hosting service
+- Configure production API URL
+
+## 📄 License
+
+This project is part of Laboratory Activities coursework.
 # Real-Time Chat Application
 
 A modern real-time chat application built with React, NestJS, and WebSocket.
